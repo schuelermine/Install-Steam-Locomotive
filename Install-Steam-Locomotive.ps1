@@ -1,9 +1,12 @@
 param([String]$Profile)
 
 if (!$Profile) {
-  Write-Output "Please supply your profile location under -Profile."
+  Write-Output "Please supply your profile location under -Profile. Cannot continue."
   exit
 }
+
+if (!(Get-Command -Name "wsl" -CommandType "Application")) {
+  Write-Output "You don't have WSL installed. Cannot continue."
 
 if (!(wsl command -v sl)) {
   Write-Output "First, install SL."
