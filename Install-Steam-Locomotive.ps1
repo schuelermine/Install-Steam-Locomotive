@@ -24,5 +24,8 @@ if (wsl command -v sl) {
 }
 
 if (!(wsl command -v sl)) {
-  Write-Output "Failed."
+  Write-Output "Failed installing wsl."
+  exit
 }
+
+Write-Output "Success!"
