@@ -7,6 +7,8 @@ if (!$Profile) {
 
 if (!(Get-Command -Name "wsl" -CommandType "Application")) {
   Write-Output "You don't have WSL installed. Cannot continue."
+  exit
+}
 
 if (!(wsl command -v sl)) {
   Write-Output "First, install SL."
