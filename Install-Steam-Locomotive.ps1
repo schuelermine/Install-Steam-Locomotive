@@ -17,8 +17,8 @@ if (!(wsl command -v sl)) {
 
 if (wsl command -v sl) {
   Add-Content $Profile "`n# Code inserted by Install-Steam-Locomotive`n"
-  Add-Content $Profile "Set-Alias `"Steam-Locomotive`" `"wsl sl -e`"`n"
-  Add-Content $Profile "Set-Alias `"Steam-Locomotive-Force`" `"wsl sl`"`n"
+  Add-Content $Profile "function Steam-Locomotive {wsl sl -e}`n"
+  Add-Content $Profile "function Steam-Locomotive-Force {wsl sl}`n"
   Add-Content $Profile "`n# </>`n"
   Write-Output "Done!"
 }
