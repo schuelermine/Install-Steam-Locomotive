@@ -28,4 +28,4 @@ if (!(wsl command -v sl)) {
   exit
 }
 
-Write-Output "Success!"
+Write-Output "Success! Please restart PowerShell."
