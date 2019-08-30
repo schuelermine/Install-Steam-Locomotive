@@ -5,7 +5,7 @@ If the script finishes successfully, you can type `Steam-Locomotive` in PS to st
 
 Example:
 
-    PS C:\Users\User\Downloads\> Install-Steam-Locomotive.ps1 -Profile $PROFILE
+    PS C:\Users\User\Downloads\> .\Install-Steam-Locomotive.ps1 -Profile $PROFILE
     Done!
     Success!
     PS C:\Users\User\Downloads\> exit
