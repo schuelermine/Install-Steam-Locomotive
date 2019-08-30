@@ -1,4 +1,4 @@
-param([String]$Profile, [Switch]$Skip-Reload)
+param([String]$Profile, [Switch]$SkipReload)
 
 if (!$Profile) {
   Write-Output "Please supply your profile location under -Profile. Cannot continue."
@@ -28,7 +28,7 @@ if (!(wsl command -v sl)) {
   exit
 }
 
-if (!$Skip-Reload) {
+if (!$SkipReload) {
   . $Profile
 }
 
