@@ -1,4 +1,4 @@
-param([String]$Profile)
+param([String]$Profile, [Switch]$Skip-Reload)
 
 if (!$Profile) {
   Write-Output "Please supply your profile location under -Profile. Cannot continue."
@@ -28,6 +28,10 @@ if (wsl command -v sl) {
 if (!(wsl command -v sl)) {
   Write-Output "Failed installing wsl."
   exit
+}
+
+if (!$Skip-Reload) {
+  . $Profile
 }
 
 Write-Output "Success!"
