@@ -1,4 +1,23 @@
-param([String]$Profile, [Switch]$SkipReload)
+param([String]$Profile, [Switch]$SkipReload, [Switch]$Help)
+
+$HelpText = "This script helps you use the tremendous sl program in Windows PowerShell.
+Simply download the .ps1 file and execute it.
+
+If the script finishes successfully, you can type Steam-Locomotive in PS to start the interruptable sl -e. Use Steam-Locomotive-Force to prevent interruption (sl).
+
+If you don't want your profile to be reloaded, pass the -Skip-Reload switch.
+
+Example:
+
+PS C:\Users\User\Downloads\> .\Install-Steam-Locomotive.ps1 -Profile $PROFILE -SkipReload
+Done!
+Success!
+PS C:\Users\User\Downloads\> exit"
+
+if ($Help) {
+  Write-Output $HelpText
+  exit
+}
 
 if (!$Profile) {
   Write-Output "Please supply your profile location under -Profile. Cannot continue."
