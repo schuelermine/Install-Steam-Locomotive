@@ -29,7 +29,7 @@ if (!(wsl command -v sl)) {
 }
 
 if (!$SkipReload) {
-  & $Profile
+  .$Profile
 }
 
 Write-Output "Success!"
