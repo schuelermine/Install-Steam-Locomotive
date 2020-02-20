@@ -26,15 +26,15 @@ if (!$Profile) {
   $ErrorMessages += @("Please supply your profile location under -Profile. Cannot continue.")
 }
 
-if ((Get-Command -Name "Steam-Locomotive") -and !$Force) {
+if ((Get-Command -Name "Steam-Locomotive" -ErrorAction SilentlyContinue) -and !$Force) {
   $ErrorMessages += @("It seems a command named `"Steam-Locomotive`" is already installed. Use -Force to continue anyways.")
 }
 
-if ((Get-Content $Profile | Select-String "Steam-Locomotive") -and $Profile -and !$Force) {
+if ((Get-Content $Profile | Select-String "Steam-Locomotive" -ErrorAction SilentlyContinue) -and $Profile -and !$Force) {
   $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
 }
 
-if (!(Get-Command -Name "wsl" -CommandType "Application")) {
+if (!(Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyContinue)) {
   $ErrorMessages += @("You don't have WSL installed. Cannot continue.")
 }
 
