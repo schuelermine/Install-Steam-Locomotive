@@ -1,4 +1,13 @@
-param([String]$Profile, [Switch]$Help)
+param([String]$Profile, [Switch]$Help, [Switch]$Force)
+
+$ErrorMessages = @()
+
+$Payload = "
+# <Code inserted by Install-Steam-Locomotive>
+function Steam-Locomotive {wsl sl -e}
+function Steam-Locomotive-Force {wsl sl}
+# </>
+"
 
 $HelpText = "This script helps you use the tremendous sl program in Windows PowerShell.
 Simply download the .ps1 file and execute it.
@@ -19,12 +28,23 @@ if ($Help) {
 }
 
 if (!$Profile) {
-  Write-Output "Please supply your profile location under -Profile. Cannot continue."
-  exit
+  $ErrorMessages += @("Please supply your profile location under -Profile. Cannot continue.")
+}
+
+if (Get-Command -Name "Steam-Locomotive" -and !$Force) {
+  $ErrorMessages += @("It seems a command named "Steam-Locomotive" is already installed. Use -Force to continue anyways.")
+}
+
+if ((Get-Content $Profile | Select-String "Steam-Locomotive") -and $Profile) {
+  $ErrorMessages += @("Your profile seems to already contain something called "Steam-Locomotive". Use -Force to continue anyways.")
 }
 
 if (!(Get-Command -Name "wsl" -CommandType "Application")) {
-  Write-Output "You don't have WSL installed. Cannot continue."
+  $ErrorMessages += @("You don't have WSL installed. Cannot continue.")
+}
+
+if ($ErrorMessages) {
+  WriteOutput $ErrorMessages
   exit
 }
 
@@ -34,10 +54,7 @@ if (!(wsl command -v sl)) {
 }
 
 if (wsl command -v sl) {
-  Add-Content $Profile "`n`n# Code inserted by Install-Steam-Locomotive`n"
-  Add-Content $Profile "function Steam-Locomotive {wsl sl -e}`n"
-  Add-Content $Profile "function Steam-Locomotive-Force {wsl sl}`n"
-  Add-Content $Profile "`n# </>`n"
+  Add-Content $Profile $Payload
   Write-Output "Done!"
 }
 
