@@ -30,7 +30,7 @@ if ((Get-Command -Name "Steam-Locomotive" -ErrorAction SilentlyContinue) -and !$
   $ErrorMessages += @("It seems a command named `"Steam-Locomotive`" is already installed. Use -Force to continue anyways.")
 }
 
-if ((Get-Content $Profile | Select-String "Steam-Locomotive" -ErrorAction SilentlyContinue) -and $Profile -and !$Force) {
+if ((Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") -and $Profile -and !$Force) {
   $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
 }
 
