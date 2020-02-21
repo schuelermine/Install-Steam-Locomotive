@@ -28,9 +28,8 @@ if (!(Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyCo
 
 if (!$Profile) {
   $ErrorMessages += @("Please supply your profile location under -Profile. Cannot continue.")
-  if (Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") {
-    $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
-  }
+} elseif (Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") {
+  $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
 }
 
 if ((Get-Command -Name "Steam-Locomotive" -ErrorAction SilentlyContinue) -and !$Force) {
