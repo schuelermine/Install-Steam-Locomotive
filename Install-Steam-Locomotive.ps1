@@ -22,11 +22,11 @@ if ($Help) {
   exit
 }
 
-if (!(Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyContinue)) {
+if (-not (Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyContinue)) {
   $ErrorMessages += @("You don't have WSL installed. Cannot continue.")
 }
 
-if (!$Profile) {
+if ([String]::IsNullOrEmpty($Profile)) {
   $ErrorMessages += @("Please supply your profile location under -Profile. Cannot continue.")
 } elseif (Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") {
   $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
@@ -41,7 +41,7 @@ if ($ErrorMessages) {
   exit
 }
 
-if (!(wsl command -v sl)) {
+if (-not (wsl command -v sl)) {
   Write-Output "First, install SL."
   wsl sudo apt install sl
 }
@@ -51,7 +51,7 @@ if (wsl command -v sl) {
   Write-Output "Done!"
 }
 
-if (!(wsl command -v sl)) {
+if (-not (wsl command -v sl)) {
   Write-Output "Failed installing wsl."
   exit
 }
