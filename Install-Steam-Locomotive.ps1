@@ -1,19 +1,42 @@
+[CmdletBinding(
+    SupportsShouldProcess
+)]
+
 param(
-    [String]$Profile,
-    [Switch]$Help,
-    [Switch]$Force
+    [Parameter(
+        Mandatory
+    )]
+    [String]
+    $Profile,
+
+    [Switch]
+    $Help,
+
+    [Switch]
+    $Force,
+
+    [Switch]
+    $NoWSLCheck,
+    
+    [Switch]
+    $NoProfileCheck,
+
+    [Switch]
+    $NoCommandCheck
 )
 
-$ErrorMessages = @()
+$CannotContinue = $false
 
-$Payload = "
+$Payload =
+"
 # <Code inserted by Install-Steam-Locomotive>
 function Steam-Locomotive {wsl sl -e}
 function Steam-Locomotive-Force {wsl sl}
 # </>
 "
 
-$HelpText = "This script helps you use the tremendous `"sl`" program in Windows PowerShell.
+$HelpText =
+"This script helps you use the tremendous `"sl`" program in Windows PowerShell.
 Simply download the .ps1 file and execute it.
 If the script finishes successfully, you can type Steam-Locomotive in PS to start the interruptable `"sl -e`".
 Use Steam-Locomotive-Force to prevent interruption (`"sl`").
@@ -26,23 +49,44 @@ if ($Help) {
     exit
 }
 
-if (-not (Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyContinue)) {
-    $ErrorMessages += @("You don't have WSL installed. Cannot continue.")
+if (-not $NoWSLCheck.IsPresent) {
+    if (-not (Get-Command -Name "wsl" -CommandType "Application" -ErrorAction SilentlyContinue) -and -not $Force.IsPresent) {
+        $ErrorMessage = @{
+            Message = "You don't have WSL installed. Use -Force to continue anyway."
+            Category = "NotInstalled"
+        }
+
+        Write-Error @ErrorMessage
+        $CannotContinue = $true
+    }
 }
 
-if ([String]::IsNullOrEmpty($Profile)) {
-    $ErrorMessages += @("Please supply your profile location under -Profile. Cannot continue.")
-} elseif (Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") {
-    $ErrorMessages += @("Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways.")
+if (-not $NoProfileCheck.IsPresent) {
+    if ((Get-Content $Profile -ErrorAction SilentlyContinue | Select-String "Steam-Locomotive") -and -not $Force) {
+        $ErrorMessage = @{
+            Message = "Your profile seems to already contain something called `"Steam-Locomotive`". Use -Force to continue anyways."
+            Category = "ResourceExists"
+        }
+
+        Write-Error @ErrorMessage
+        $CannotContinue = $true
+    }
 }
 
-if ((Get-Command -Name "Steam-Locomotive" -ErrorAction SilentlyContinue) -and !$Force) {
-    $ErrorMessages += @("It seems a command named `"Steam-Locomotive`" is already installed. Use -Force to continue anyways.")
+if (-not $NoCommandCheck.IsPresent) {
+    if ((Get-Command -Name "Steam-Locomotive" -ErrorAction SilentlyContinue) -and -not $Force) {
+        $ErrorMessage = @{
+            Message = "It seems a command named `"Steam-Locomotive`" is already installed. Use -Force to continue anyways."
+            Category = "ResourceExists"
+        }
+
+        Write-Error @ErrorMessage
+        $CannotContinue = $true
+    }
 }
 
-if ($ErrorMessages) {
-    Write-Output $ErrorMessages
-    exit
+if ($CannotContinue) {
+    exit 1
 }
 
 if (-not (wsl command -v sl)) {
